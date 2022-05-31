@@ -48,4 +48,17 @@ public class UserController {
         session.removeAttribute("code");
         return R.success("用户成功退出");
     }
+
+    @ApiOperation("完善个人信息")
+    @PostMapping("/enroll")
+    public R<String> enroll(@RequestBody User user) {
+        return userService.enroll(user);
+    }
+
+    @ApiOperation("用户名登录")
+    @PostMapping("/userLogin")
+    public R<User> userLogin(@RequestBody LoginFormDTO loginForm, HttpSession session) {
+        log.info("{}", loginForm);
+        return userService.userLogin(loginForm, session);
+    }
 }

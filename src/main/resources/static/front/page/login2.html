@@ -23,19 +23,16 @@
 <div id="login" v-loading="loading">
     <div class="divHead">登录</div>
     <div class="divContainer">
-        <el-input placeholder=" 请输入手机号码" v-model="form.phone" maxlength='20'/>
+        <el-input placeholder=" 请输入用户名" v-model="form.username" maxlength='20'/>
         </el-input>
         <div class="divSplit"></div>
-        <el-input placeholder=" 请输入验证码" v-model="form.code" maxlength='20'/>
+        <el-input placeholder=" 请输入密码" v-model="form.password" maxlength='20' show-password/>
         </el-input>
-        <button @click='getCode' id="login1">获取验证码</button>
-
     </div>
-    <div class="divMsg" v-if="msgFlag">手机号输入不正确，请重新输入</div>
-    <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.phone,btnPhone:form.phone}" @click="btnLogin">
+    <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.username,btnPhone:form.username}" @click="btnLogin">
         登录
     </el-button>
-    <button @click="logins" id="login2">用户名登录</button>
+    <button @click="logins" id="login2">手机号登录</button>
 </div>
 <!-- 开发环境版本，包含了有帮助的命令行警告 -->
 <script src="../../backend/plugins/vue/vue.js"></script>
@@ -55,8 +52,8 @@
         data() {
             return {
                 form: {
-                    phone: '',
-                    code: ''
+                    username: '',
+                    password: ''
                 },
                 msgFlag: false,
                 loading: false
@@ -68,33 +65,12 @@
         mounted() {
         },
         methods: {
-            getCode() {
-                this.form.code = ''
-                const regex = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
-                if (regex.test(this.form.phone)) {
-                    this.msgFlag = false
-                    //this.form.code = (Math.random()*1000000).toFixed(0)
-                    const s = document.querySelector('#login1')
-                    s.disabled = true
-                    const times = setInterval(function () {
-                        s.innerHTML = time + '秒后重新发送'
-                        time--
-                        if (time == 0) {
-                            s.disabled = false
-                            s.innerHTML = '获取验证码'
-                            time = 60
-                            clearInterval(times)
-                        }
-                    }, 1000)
-                    sendMsgApi({phone: this.form.phone})
-                } else {
-                    this.msgFlag = true
-                }
-            },
             async btnLogin() {
-                if (this.form.phone && this.form.code) {
+                this.form.code=''
+                userLoginApi({username: this.form.username, password: this.form.password})
+                if (this.form.username && this.form.password) {
                     this.loading = true
-                    const res = await loginApi(this.form)
+                    const res = await userLoginApi(this.form)
                     this.loading = false
                     if (res.code === 1) {
                         sessionStorage.setItem("userName", res.data.name)
@@ -102,23 +78,18 @@
                         window.requestAnimationFrame(() => {
                             window.location.href = '/front/index.html'
                         })
-                    } else if (res.code === 2) {
-                        sessionStorage.setItem("userPhone", res.data.phone)
-                        window.requestAnimationFrame(() => {
-                            window.location.href = '/front/page/msg.html'
-                        })
                     } else {
                         this.$notify({type: 'warning', message: res.msg});
                     }
                 } else {
-                    this.$notify({type: 'warning', message: '请输入手机号码'});
+                    this.$notify({type: 'warning', message: '请输入密码'});
                 }
             },
             logins() {
                 window.requestAnimationFrame(() => {
-                    window.location.href = '/front/page/login2.html'
+                    window.location.href = '/front/page/login.html'
                 })
-            }
+            },
         }
     })
 </script>

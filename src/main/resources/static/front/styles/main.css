@@ -568,7 +568,13 @@
   color: #333333;
   line-height: 22rem;
   letter-spacing: 0;
-  margin-bottom: 17rem;
+  margin-bottom: 6rem;
+}
+#main .dialogCart .divCartContent .divDesc .flavor {
+
+  font-size: 14rem;
+  font-family: PingFangSC, PingFangSC-Semibold;
+  font-weight: 300;
 }
 
 #main .dialogCart .divCartContent .divDesc .price {

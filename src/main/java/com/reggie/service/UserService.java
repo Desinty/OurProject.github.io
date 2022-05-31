@@ -15,4 +15,9 @@ public interface UserService extends IService<User> {
     R<String> sendMsg(User user, HttpSession session);
 
     R<User> login(LoginFormDTO loginForm, HttpSession session);
+
+
+    R<String> enroll(User user);
+
+    R<User> userLogin(LoginFormDTO loginForm, HttpSession session);
 }

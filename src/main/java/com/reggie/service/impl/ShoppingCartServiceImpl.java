@@ -75,12 +75,14 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
     public R<String> subShoppingCart(ShoppingCart shoppingCart) {
         // 1.获取userId
         Long userId = BaseContext.getCurrentId();
-        // 2.根据userId、setmeal_id/dish_id查询购物信息
+        // 2.根据userId、setmeal_id/dish_id/dish_flavor查询购物信息
         Long dishId = shoppingCart.getDishId();
         Long setmealId = shoppingCart.getSetmealId();
+        String dishFlavor = shoppingCart.getDishFlavor();
         LambdaQueryWrapper<ShoppingCart> shoppingCartWrapper = new LambdaQueryWrapper<>();
         shoppingCartWrapper.eq(userId != null, ShoppingCart::getUserId, userId);
         shoppingCartWrapper.eq(dishId != null, ShoppingCart::getDishId, dishId);
+        shoppingCartWrapper.eq(dishFlavor != null, ShoppingCart::getDishFlavor, dishFlavor);
         shoppingCartWrapper.eq(setmealId != null, ShoppingCart::getSetmealId, setmealId);
         ShoppingCart scInfo = getOne(shoppingCartWrapper);
         // 3.判断数量是否等于1

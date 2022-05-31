@@ -22,6 +22,13 @@ public class R<T> {
         return r;
     }
 
+    public static <T> R<T> userRegister(T object) {
+        R<T> r = new R<T>();
+        r.data = object;
+        r.code = 2;//用户注册成功响应2
+        return r;
+    }
+
     public static <T> R<T> error(String msg) {
         R r = new R();
         r.msg = msg;

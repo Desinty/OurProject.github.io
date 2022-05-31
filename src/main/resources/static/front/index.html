@@ -124,6 +124,7 @@
               </el-image>
               <div class="divDesc">
                 <div class="name">{{item.name}}</div>
+                <div class="name">{{item.dishFlavor}}</div>
                 <div class="price">
                   <span class="spanMoney">￥</span>{{item.amount}}</div>
               </div>
@@ -474,6 +475,7 @@
               let params = {
                   dishId:item.dishId,
                   setmealId:item.setmealId,
+                  dishFlavor:item.dishFlavor,
                 }
                 const res = await updateCartApi(params)
                 if(res.code === 1){

@@ -5,6 +5,7 @@ import com.reggie.entity.ShoppingCart;
 import com.reggie.service.ShoppingCartService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @create 2022-05-19-0:02
  */
 @Api(tags = "购物车控制器")
+@Slf4j
 @RestController
 @RequestMapping("/shoppingCart")
 public class ShoppingCartController {
@@ -36,6 +38,7 @@ public class ShoppingCartController {
     @ApiOperation("减少购物车")
     @PostMapping("/sub")
     public R<String> subShoppingCart(@RequestBody ShoppingCart shoppingCart) {
+        log.info("shoppingCart:{}", shoppingCart);
         return shoppingCartService.subShoppingCart(shoppingCart);
     }
     @ApiOperation("清空购物车")

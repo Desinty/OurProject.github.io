@@ -31,8 +31,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-
-
         log.info("路径被拦截：{}", request.getRequestURI());
         response.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
         return false;

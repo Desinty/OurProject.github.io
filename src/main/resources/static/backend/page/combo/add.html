@@ -267,17 +267,17 @@
         width="60%"
         :before-close="handleClose"
       >
-        <el-input
-          v-model="value"
-          class="seachDish"
-          placeholder="请输入菜品名称进行搜索"
-          style="width: 250px"
-          size="small"
-          clearable
-        >
-          <i slot="prefix" class="el-input__icon el-icon-search" style="cursor: pointer" @click="seachHandle"></i>
-        </el-input>
-        <!-- <AddDish ref="adddish" :check-list="checkList" :seach-key="seachKey" @checkList="getCheckList" /> -->
+<!--        <el-input-->
+<!--          v-model="value"-->
+<!--          class="seachDish"-->
+<!--          placeholder="请输入菜品名称进行搜索"-->
+<!--          style="width: 250px"-->
+<!--          size="small"-->
+<!--          clearable-->
+<!--        >-->
+<!--          <i slot="prefix" class="el-input__icon el-icon-search" style="cursor: pointer" @click="seachHandle"></i>-->
+<!--        </el-input>-->
+<!--         <AddDish ref="adddish" :check-list="checkList" :seach-key="seachKey" @checkList="getCheckList" />-->
         
         <div class="addDishCon">
           <div class="leftCont">
@@ -474,9 +474,9 @@
               }
             })
           },
-          seachHandle() {
-            this.seachKey = this.value
-          },
+          // seachHandle() {
+          //   this.seachKey = this.value
+          // },
           // 获取套餐分类
           getDishTypeList() {
             getCategoryList({ type: 2, page: 1, pageSize: 1000 }).then((res) => {

@@ -32,6 +32,7 @@ public class MvcConfig implements WebMvcConfigurer {
                         "/employee/logout",
                         "/user/sendMsg",
                         "/user/login",
+                        "/user/userLogin",
                         "/common/**",
                         "/backend/**",
                         "/front/**",

@@ -5,6 +5,13 @@ function loginApi(data) {
       data
     })
 }
+function userLoginApi(data) {
+    return $axios({
+        'url': '/user/userLogin',
+        'method': 'post',
+        data
+    })
+}
 
 function sendMsgApi(data) {
     return $axios({
@@ -20,5 +27,15 @@ function loginoutApi() {
     'method': 'post',
   })
 }
+
+function enrollApi(data){
+    return $axios({
+        'url':'/user/enroll',
+        'method':'post',
+        data
+    })
+}
+
+
 
   

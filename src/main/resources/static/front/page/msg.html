@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no,minimal-ui">
+    <title>菩提阁</title>
+    <link rel="icon" href="./../images/favico.ico">
+    <!--不同屏幕尺寸根字体设置-->
+    <script src="./../js/base.js"></script>
+    <!--element-ui的样式-->
+    <link rel="stylesheet" href="../../backend/plugins/element-ui/index.css"/>
+    <!--引入vant样式-->
+    <link rel="stylesheet" href="../styles/vant.min.css"/>
+    <!-- 引入样式  -->
+    <link rel="stylesheet" href="../styles/index.css"/>
+    <!--本页面内容的样式-->
+    <link rel="stylesheet" href="./../styles/msg.css"/>
+</head>
+<body>
+<div id="msg" v-loading="loading">
+    <div class="divHead">个人信息</div>
+    <div class="divContainer">
+        <el-input placeholder=" 请输入用户名" v-model="form.username" maxlength='20'/>
+        </el-input>
+        <div class="divSplit"></div>
+        <el-input placeholder=" 请输入姓名" v-model="form.name" maxlength='20'/>
+        </el-input>
+        <div class="divSplit"></div>
+        <el-input placeholder="请输入密码" v-model="form.password" maxlength='20' show-password/>
+        </el-input>
+        <div class="divSplit"></div>
+        <el-input placeholder=" 请输入身份证号码" v-model="form.idNumber" maxlength='18' show-password/>
+        </el-input>
+        <div class="divSplit"></div>
+    </div>
+    <div class="divMsg" v-if="idMsgFlag">身份证输入不正确，请重新输入</div>
+    <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.username,btnPhone:form.username}"
+               @click="btnLogin">
+        保存
+    </el-button>
+</div>
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="../../backend/plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../backend/plugins/element-ui/index.js"></script>
+<!-- 引入vant样式 -->
+<script src="./../js/vant.min.js"></script>
+<!-- 引入axios -->
+<script src="../../backend/plugins/axios/axios.min.js"></script>
+<script src="./../js/request.js"></script>
+<script src="./../api/login.js"></script>
+</body>
+<script>
+    new Vue({
+        el: "#msg",
+        data() {
+            return {
+                form: {
+                    password: '',
+                    username: '',
+                    name: '',
+                    idNumber: ''
+                },
+                idMsgFlag: false,
+                loading: false
+            }
+        },
+        computed: {},
+        created() {
+        },
+        mounted() {
+        },
+        methods: {
+            async btnLogin() {
+                const isIDCard = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+                if (isIDCard.test(this.form.idNumber)) {
+                    this.idMsgFlag = false
+                    enrollApi({
+                        username: this.form.username,
+                        name: this.form.name,
+                        password: this.form.password,
+                        idNumber: this.form.idNumber
+                    })
+                } else {
+                    this.idMsgFlag = true
+                }
+                if (this.form.password && this.form.name && this.form.idNumber && this.form.username) {
+                    this.loading = true
+                    const res = await enrollApi(this.form)
+                    this.loading = false
+                    sessionStorage.setItem("userName", this.form.name)
+                    sessionStorage.setItem("userPhone", sessionStorage.getItem("userPhone"))
+                    if (this.idMsgFlag === false && res.code === 1) {
+                        window.requestAnimationFrame(() => {
+                            window.location.href = '/front/index.html'
+                        })
+                    } else if (res.code === 0) {
+                        this.$notify({type: 'warning', message: res.msg});
+                    } else {
+                        this.$notify({type: 'warning', message: '输入的信息有误'});
+                    }
+                } else {
+                    this.$notify({type: 'warning', message: '请输入完整信息'});
+                }
+            }
+        }
+    })
+</script>
+</html>
