@@ -191,6 +191,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         ordersWrapper.like(StrUtil.isNotBlank(number), Orders::getNumber, number);
         ordersWrapper.gt(StrUtil.isNotBlank(beginTime), Orders::getOrderTime, beginTime);
         ordersWrapper.lt(StrUtil.isNotBlank(endTime), Orders::getOrderTime, endTime);
+        ordersWrapper.orderByDesc(Orders::getOrderTime);
         // 3.查询分页信息
         page(ordersPage, ordersWrapper);
         // 4.返回

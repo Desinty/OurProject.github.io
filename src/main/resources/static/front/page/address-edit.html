@@ -121,7 +121,7 @@
                             this.$notify({ type:'warning', message:'请输入收货地址'});
                             return 
                         }
-                        const reg = /^1[3|4|5|7|8][0-9]{9}$/
+                        const reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
                         if(!reg.test(form.phone)){
                             this.$notify({ type:'warning', message:'手机号码不合法'});
                             return  
@@ -134,8 +134,12 @@
                         }
                         
                         if(res.code === 1){
+                            if (sessionStorage.getItem("order")==="123") {
+                                sessionStorage.removeItem("order")
+                                sessionStorage.setItem("order","456")
+                            }
                             window.requestAnimationFrame(()=>{
-                                window.location.replace('/front/page/address.html')
+                                window.location.href='/front/page/address.html'
                             })
                         }else{
                             this.$notify({ type:'warning', message:res.msg});
@@ -149,8 +153,12 @@
                         .then( async () => {
                             const res = await deleteAddressApi({ids:this.id })
                             if(res.code === 1){
+                                if (sessionStorage.getItem("order")==="123") {
+                                    sessionStorage.removeItem("order")
+                                    sessionStorage.setItem("order","456")
+                                }
                                 window.requestAnimationFrame(()=>{
-                                    window.location.replace('/front/page/address.html')
+                                    window.location.href='/front/page/address.html'
                                 })
                             }else{
                                 this.$notify({ type:'warning', message:res.msg});
