@@ -138,7 +138,10 @@
                 mounted(){},
                 methods:{
                     goBack(){
-                        history.go(-1)
+                        // history.go(-1)
+                        window.requestAnimationFrame(()=>{
+                            window.location.href = '/front/index.html'
+                        })
                     },
                     initData(){
                         //获取默认的地址
