@@ -62,8 +62,7 @@ public class EmployeeController {
     @PutMapping()
     public R<String> update(@RequestBody Employee employee) {
         log.info("员工状态：{}", employee.getStatus());
-        employeeService.updateById(employee);
-        return R.success("成功更新员工信息");
+        return employeeService.updateEmp(employee);
     }
 
     @ApiOperation("根据id查询员工信息")

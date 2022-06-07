@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.reggie.common.CustomException;
 import com.reggie.common.R;
 import com.reggie.entity.Employee;
 import com.reggie.mapper.EmployeeMapper;
@@ -57,16 +58,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     public R<String> saveEmp(HttpServletRequest request, Employee employee) {
         //将密码转成密文 默认密码：123456
         employee.setPassword(MD5.encrypt("123456"));
-
-        //设置新增和更新时间
-//        employee.setCreateTime(LocalDateTime.now());
-//        employee.setUpdateTime(LocalDateTime.now());
-
-        //设置初始和更新的用户
-//        Long userId = (Long) request.getSession().getAttribute("employee");
-//        employee.setCreateUser(userId);
-//        employee.setUpdateUser(userId);
-
         save(employee);
         return R.success("新增员工成功");
     }
@@ -80,21 +71,32 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
 
         queryWrapper.like(StringUtils.isNotBlank(name), "name", name);
-        queryWrapper.orderByDesc("update_time");
+        queryWrapper.orderByAsc("create_time");
 
         page(pageInfo, queryWrapper);
         return R.success(pageInfo);
     }
 
-
-/*    @Override
-    public R<String> updateEmp(HttpServletRequest request, Employee employee) {
-
-        //更改数据库状态信息
-        employee.setUpdateTime(LocalDateTime.now());
-        Long userId = (Long) request.getSession().getAttribute("employee");
-        employee.setUpdateUser(userId);
+    @Override
+    public R<String> updateEmp(Employee employee) {
+        // 1.获取员工id
+        Long empId = employee.getId();
+        // 2.与管理员id比较 -- 1
+        if (empId == 1L) {
+            Employee admin = getById(empId);
+            if (!admin.getStatus().equals(employee.getStatus())) {
+                return R.error("管理员登录权限不能修改");
+            }
+            if (!admin.getUsername().equals(employee.getUsername())) {
+                return R.error("管理员账号不能修改");
+            }
+            if (!admin.getName().equals(employee.getName())) {
+                return R.error("管理员名字不能修改");
+            }
+        }
+        // 3.更新员工信息
         updateById(employee);
-        return R.success("状态更新成功");
-    }*/
+        return R.success("员工信息修改成功");
+    }
+
 }

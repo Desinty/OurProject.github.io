@@ -18,6 +18,6 @@ public interface EmployeeService extends IService<Employee> {
 
     R<Page> pageR(Integer page, Integer pageSize, String name);
 
-//    R<String> updateEmp(HttpServletRequest request, Employee employee);
 
+    R<String> updateEmp(Employee employee);
 }
