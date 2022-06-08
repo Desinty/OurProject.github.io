@@ -2,6 +2,7 @@ package com.reggie.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.reggie.common.R;
+import com.reggie.dto.DishDto;
 import com.reggie.dto.SetmealDto;
 import com.reggie.entity.Dish;
 import com.reggie.entity.Setmeal;
@@ -82,7 +83,7 @@ public class SetmealController {
 
     @ApiOperation("显示菜品")
     @GetMapping("/dish/{id}")
-    public R<List<Dish>> dishInSetmeal(@PathVariable("id") Long setmealId) {
+    public R<List<DishDto>> dishInSetmeal(@PathVariable("id") Long setmealId) {
         return setmealService.dishInSetmeal(setmealId);
     }
 }

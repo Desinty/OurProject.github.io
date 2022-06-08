@@ -29,7 +29,7 @@
         <el-input placeholder=" 请输入密码" v-model="form.password" maxlength='20' show-password/>
         </el-input>
     </div>
-    <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.username,btnPhone:form.username}" @click="btnLogin">
+    <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.password,btnPhone:form.password}" @click="btnLogin">
         登录
     </el-button>
     <button @click="logins" id="login2">手机号登录</button>

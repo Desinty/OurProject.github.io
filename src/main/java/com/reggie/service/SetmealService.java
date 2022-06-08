@@ -4,6 +4,7 @@ package com.reggie.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.reggie.common.R;
+import com.reggie.dto.DishDto;
 import com.reggie.dto.SetmealDto;
 import com.reggie.entity.Dish;
 import com.reggie.entity.Setmeal;
@@ -30,6 +31,6 @@ public interface SetmealService extends IService<Setmeal> {
 
     R<List<Setmeal>> listSetmeal(Setmeal setmeal);
 
-    R<List<Dish>> dishInSetmeal(Long setmealId);
+    R<List<DishDto>> dishInSetmeal(Long setmealId);
 
 }

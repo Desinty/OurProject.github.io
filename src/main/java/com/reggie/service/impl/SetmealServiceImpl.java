@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.reggie.common.BaseContext;
 import com.reggie.common.CustomException;
 import com.reggie.common.R;
+import com.reggie.dto.DishDto;
 import com.reggie.dto.SetmealDto;
 import com.reggie.entity.*;
 import com.reggie.mapper.SetmealMapper;
@@ -150,19 +151,19 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         setmealDishes = setmealDishes.stream().map(setmealDish -> {
 
             Long dishId = setmealDish.getDishId();
-            // TODO 判断菜品是否存在
+            //判断菜品是否存在
             Dish dish = dishService.getById(dishId);
-            // TODO 不存在，返回信息
+            //不存在，返回信息
             if (dish == null) {
                 throw new CustomException(setmealDish.getName() + "已经停售");
             }
-            // TODO 判断菜品是否停售
+            //判断菜品是否停售
             LambdaQueryWrapper<Dish> dishQueryWrapper = new LambdaQueryWrapper<>();
             dishQueryWrapper.eq(Dish::getId, dishId).eq(Dish::getStatus, 0);
             int count = dishService.count(dishQueryWrapper);
 
             if (count == 1) {
-                // TODO 停售，返回信息
+                //停售，返回信息
                 throw new CustomException(setmealDish.getName() + "已经停售");
             }
             //**************************************
@@ -209,27 +210,25 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         return R.success(setmealList);
     }
 
+
     @Override
-    public R<List<Dish>> dishInSetmeal(Long setmealId) {
+    public R<List<DishDto>> dishInSetmeal(Long setmealId) {
         // 1.在setmeal_dish表中查询套餐关联的菜品
         LambdaQueryWrapper<SetmealDish> setmealDishWrapper = new LambdaQueryWrapper<>();
         setmealDishWrapper.eq(setmealId != null, SetmealDish::getSetmealId, setmealId)
                 .orderByDesc(SetmealDish::getUpdateTime);
         List<SetmealDish> setmealDishList = setmealDishService.list(setmealDishWrapper);
-        // 2.根据菜品id查出菜品信息
-        ArrayList<Long> dishIdList = new ArrayList<>();
-        setmealDishList.stream().map(new Function<SetmealDish, SetmealDish>() {
-            @Override
-            public SetmealDish apply(SetmealDish setmealDish) {
-                dishIdList.add(setmealDish.getDishId());
-                return setmealDish;
-            }
+        // 2.封装套餐信息到dto
+        List<DishDto> dishDtoList = setmealDishList.stream().map(setmealDish -> {
+            DishDto dishDto = new DishDto();
+            BeanUtil.copyProperties(setmealDish, dishDto);
+            Long dishId = setmealDish.getDishId();
+            Dish dish = dishService.getById(dishId);
+            BeanUtil.copyProperties(dish, dishDto);
+            return dishDto;
         }).collect(Collectors.toList());
-        LambdaQueryWrapper<Dish> dishWrapper = new LambdaQueryWrapper<>();
-        dishWrapper.in( Dish::getId, dishIdList);
-        List<Dish> dishList = dishService.list(dishWrapper);
         // 3.返回
-        return R.success(dishList);
+        return R.success(dishDtoList);
     }
 
 }
