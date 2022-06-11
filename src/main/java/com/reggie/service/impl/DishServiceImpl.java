@@ -142,22 +142,16 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     public R<String> status(Integer status, List<Long> ids) {
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         // 1.根据id查询菜品信息
-        queryWrapper.in(Dish::getId, ids);
-        queryWrapper.eq(Dish::getStatus, status);
-        // 2.计数菜品的状态
-        int count = count(queryWrapper);
-        // 3.判断是否要修改状态
-        if (count > 0) {
-            // 4.不需要修改返回信息
-            throw new CustomException("修改状态与初始一致");
+        queryWrapper.in(ids != null, Dish::getId, ids);
+        List<Dish> list = list(queryWrapper);
+        // 2.修改菜品状态
+        for (Dish dish : list) {
+            if (dish != null) {
+                dish.setStatus(status);
+                updateById(dish);
+            }
         }
-        // 5.修改菜品状态
-        Dish dish = new Dish();
-        for (Long id : ids) {
-            dish.setId(id);
-            dish.setStatus(status);
-            updateById(dish);
-        }
+        // 3.返回
         return R.success("菜品状态更改成功");
     }
 

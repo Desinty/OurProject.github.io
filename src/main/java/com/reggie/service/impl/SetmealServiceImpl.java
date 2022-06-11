@@ -181,22 +181,16 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     public R<String> status(Integer status, List<Long> ids) {
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         // 1.根据id查询套餐信息
-        queryWrapper.in(Setmeal::getId, ids);
-        queryWrapper.eq(Setmeal::getStatus, status);
-        // 2.计数套餐的状态
-        int count = count(queryWrapper);
-        // 3.判断是否要修改状态
-        if (count > 0) {
-            // 4.不需要修改返回信息
-            throw new CustomException("修改状态与初始一致");
+        queryWrapper.in(ids != null, Setmeal::getId, ids);
+        List<Setmeal> list = list(queryWrapper);
+        // 2.修改套餐状态
+        for (Setmeal setmeal : list) {
+            if (setmeal != null) {
+                setmeal.setStatus(status);
+                updateById(setmeal);
+            }
         }
-        // 5.修改套餐状态
-        Setmeal setmeal = new Setmeal();
-        for (Long id : ids) {
-            setmeal.setId(id);
-            setmeal.setStatus(status);
-            updateById(setmeal);
-        }
+        // 3.返回
         return R.success("套餐状态修改成功");
     }
 
