@@ -29,7 +29,6 @@
         <el-input placeholder=" 请输入验证码" v-model="form.code" maxlength='20'/>
         </el-input>
         <button @click='getCode' id="login1">获取验证码</button>
-
     </div>
     <div class="divMsg" v-if="msgFlag">手机号输入不正确，请重新输入</div>
     <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.phone,btnPhone:form.phone}" @click="btnLogin">
