@@ -2,6 +2,7 @@ package com.reggie.config;
 
 import com.reggie.common.JacksonObjectMapper;
 import com.reggie.common.LoginInterceptor;
+import com.reggie.interceptor.EmpLoginInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -25,18 +26,30 @@ public class MvcConfig implements WebMvcConfigurer {
     @Autowired
     private LoginInterceptor loginInterceptor;
 
+    @Autowired
+    private EmpLoginInterceptor empLoginInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
+//        registry.addInterceptor(loginInterceptor)
+//                .excludePathPatterns(
+//                        "/employee/login",
+//                        "/employee/logout",
+//                        "/user/sendMsg",
+//                        "/user/login",
+//                        "/user/userLogin",
+//                        "/common/**",
+//                        "/backend/**",
+//                        "/front/**",
+//                        "/swagger-ui.html",
+//                        "/swagger-resources/**",
+//                        "/webjars/**"
+//                );
+        registry.addInterceptor(empLoginInterceptor)
                 .excludePathPatterns(
                         "/employee/login",
                         "/employee/logout",
-                        "/user/sendMsg",
-                        "/user/login",
-                        "/user/userLogin",
-                        "/common/**",
                         "/backend/**",
-                        "/front/**",
                         "/swagger-ui.html",
                         "/swagger-resources/**",
                         "/webjars/**"

@@ -1,21 +1,29 @@
 package com.reggie.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.reggie.common.CustomException;
 import com.reggie.common.R;
+import com.reggie.common.Result;
 import com.reggie.entity.Employee;
 import com.reggie.mapper.EmployeeMapper;
 import com.reggie.service.EmployeeService;
 import com.reggie.util.MD5;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
+
+import java.util.concurrent.TimeUnit;
+
+import static com.reggie.util.RedisConstants.EMP_LOGIN_TOKEN_KEY;
+import static com.reggie.util.RedisConstants.LOGIN_EMP_TTL;
 
 /**
  * @author XuLongjie
@@ -24,34 +32,39 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
+
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
-    public R<Employee> login(HttpServletRequest request, Employee employee) {
+    public Result login(HttpServletRequest request, Employee employee) {
         // 1.密码md5加密
         String password = employee.getPassword();
         password = MD5.encrypt(password);
         // 2.根据用户名查询数据库
         String username = employee.getUsername();
-        QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
-        Employee emp = getOne(queryWrapper);
+        Employee emp = query().eq("username", username).one();
         //用户不存在
         if (emp == null) {
-            return R.error("用户不存在");
+            return Result.fail().message("用户不存在");
         }
         // 2.1.密码比对不一致返回错误信息
         if (!emp.getPassword().equals(password)) {
-            return R.error("密码不正确");
+            return Result.fail().message("密码不正确");
         }
         // 3.一致，查看员工状态
         if (emp.getStatus() == 0) {
             // 3.1.员工状态被禁用返回错误信息
-            return R.error("该用户禁止登录");
+            return Result.fail().message("该用户禁止登录");
         }
-        // 3.2.将id存入session
-        HttpSession session = request.getSession();
-        session.setAttribute("employee", emp.getId());
+        // 3.2.将id存入redis
+        String token = UUID.randomUUID().toString(true);
+        String tokenKey = EMP_LOGIN_TOKEN_KEY + token;
+        stringRedisTemplate.opsForValue().set(tokenKey, emp.getId().toString());
+        stringRedisTemplate.expire(tokenKey, LOGIN_EMP_TTL, TimeUnit.DAYS);
         // 4.返回
-        return R.success(emp);
+        return Result.ok(token).code(1);
     }
 
     @Override

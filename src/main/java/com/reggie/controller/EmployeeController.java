@@ -3,6 +3,7 @@ package com.reggie.controller;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.reggie.common.R;
+import com.reggie.common.Result;
 import com.reggie.entity.Employee;
 import com.reggie.service.EmployeeService;
 import io.swagger.annotations.Api;
@@ -29,7 +30,7 @@ public class EmployeeController {
 
     @ApiOperation("员工登录")
     @PostMapping("/login")
-    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
+    public Result login(HttpServletRequest request, @RequestBody Employee employee) {
         return employeeService.login(request, employee);
     }
 

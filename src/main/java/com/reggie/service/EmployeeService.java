@@ -3,6 +3,7 @@ package com.reggie.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.reggie.common.R;
+import com.reggie.common.Result;
 import com.reggie.entity.Employee;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * @create 2022-05-10-17:11
  */
 public interface EmployeeService extends IService<Employee> {
-    R<Employee> login(HttpServletRequest request, Employee employee);
+    Result login(HttpServletRequest request, Employee employee);
 
     R<String> saveEmp(HttpServletRequest request, Employee employee);
 
