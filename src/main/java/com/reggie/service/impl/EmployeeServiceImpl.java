@@ -64,7 +64,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         stringRedisTemplate.opsForValue().set(tokenKey, emp.getId().toString());
         stringRedisTemplate.expire(tokenKey, LOGIN_EMP_TTL, TimeUnit.DAYS);
         // 4.返回
-        return Result.ok(token).code(1);
+        return Result.ok(token);
     }
 
     @Override

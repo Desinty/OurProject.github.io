@@ -65,7 +65,7 @@ public class MvcConfig implements WebMvcConfigurer {
                 // 是否允许cookie
                 .allowCredentials(true)
                 // 设置允许的请求方式
-                .allowedMethods("GET", "POST", "DELETE", "PUT")
+                .allowedMethods("GET", "POST", "DELETE", "PUT","OPTIONS")
                 // 设置允许的header属性
                 .allowedHeaders("*")
                 // 跨域允许时间
@@ -88,4 +88,5 @@ public class MvcConfig implements WebMvcConfigurer {
         //将上面的消息转换器对象追加到mvc框架的转换器集合中 要将自定义的转换器放到最前面
         converters.add(0, messageConverter);
     }
+
 }
