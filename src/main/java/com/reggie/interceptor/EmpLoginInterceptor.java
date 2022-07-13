@@ -35,14 +35,14 @@ public class EmpLoginInterceptor implements HandlerInterceptor {
         if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
             System.out.println("OPTIONS请求，放行");
             return true;
-        }else {
+        } else {
             String tokenKey = request.getHeader("Authorization");
             if (StrUtil.isBlank(tokenKey)) {
                 response.setStatus(401);
                 return false;
             }
             // 获取redis中的token值
-            String tokenValue = stringRedisTemplate.opsForValue().get(EMP_LOGIN_TOKEN_KEY+tokenKey);
+            String tokenValue = stringRedisTemplate.opsForValue().get(EMP_LOGIN_TOKEN_KEY + tokenKey);
             if (tokenValue == null) {
                 response.sendError(401);
                 return false;

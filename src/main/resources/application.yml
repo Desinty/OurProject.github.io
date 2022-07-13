@@ -10,9 +10,9 @@ spring:
       username: root
       password: root
   redis:
-    host: 192.168.164.128
+    host: 192.168.157.128
     port: 6379
-    password: wxw021023.
+    password: 123321
     database: 2 #选择库
     lettuce:
       pool:
